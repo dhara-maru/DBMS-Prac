@@ -37,50 +37,113 @@ VALUES
 (4, 'Electrical', 'EE', 'E-Block'),
 (5, 'Mechanical', 'ME', 'B-Block');
 
-select p.PersonID,p.PersonName, d.DepartmentName, d.DepartmentCode
+
+--===============================================PART B=========================================
+SELECT p.PersonName, d.DepartmentName, d.DepartmentCode
 FROM PERSON p
-INNER JOIN DEPARTMENT d
-ON p.DepartmentID=d.DepartmentID;
+LEFT JOIN DEPARTMENT d ON p.DepartmentID = d.DepartmentID;
 
-
-select p.PersonName, d.Location
+SELECT p.PersonName
 FROM PERSON p
-INNER JOIN DEPARTMENT d
-ON p.DepartmentID=d.DepartmentID
-WHERE d.Location IN ('C-Block');
+INNER JOIN DEPARTMENT d ON p.DepartmentID = d.DepartmentID
+WHERE d.Location = 'C-Block';
 
-
-select p.PersonName, p.Salary, d.DepartmentName
+SELECT p.PersonName, p.Salary, d.DepartmentName
 FROM PERSON p
-INNER JOIN DEPARTMENT d
-ON p.DepartmentID=d.DepartmentID
-WHERE p.City IN ('Jamnagar');
+INNER JOIN DEPARTMENT d ON p.DepartmentID = d.DepartmentID
+WHERE p.City = 'Jamnagar';
 
-
-select p.PersonName, p.Salary, d.DepartmentName
+SELECT p.PersonName, p.Salary, d.DepartmentName
 FROM PERSON p
-LEFT JOIN DEPARTMENT d
-ON p.DepartmentID=d.DepartmentID
-WHERE p.City NOT IN ('Rajkot');
+INNER JOIN DEPARTMENT d ON p.DepartmentID = d.DepartmentID
+WHERE p.City <> 'Rajkot';
 
-select p.PersonName, p.JoiningDate
+SELECT p.PersonName
 FROM PERSON p
-INNER JOIN DEPARTMENT d
-ON p.DepartmentID=d.DepartmentID
-WHERE d.DepartmentCode IN ('CI') AND p.JoiningDate IN ('01-07-2001');
+INNER JOIN DEPARTMENT d ON p.DepartmentID = d.DepartmentID
+WHERE d.DepartmentName = 'Civil' AND p.JoiningDate > '2001-08-01';
 
-
-select *
+SELECT p.*
 FROM PERSON p
-INNER JOIN DEPARTMENT d
-ON p.DepartmentID=d.DepartmentID
-WHERE  d.DepartmentName IN ('Computer');
+INNER JOIN DEPARTMENT d ON p.DepartmentID = d.DepartmentID
+WHERE d.DepartmentName = 'Computer';
 
---select count(p.PersonID), p.PersonName, p.PersonID, d.DepartmentName, d.DepartmentCode
+SELECT p.PersonName, d.DepartmentName
 FROM PERSON p
-INNER JOIN DEPARTMENT d
-ON p.DepartmentID=d.DepartmentID
-GROUP BY DepartmentName;
+INNER JOIN DEPARTMENT d ON p.DepartmentID = d.DepartmentID
+WHERE DATEDIFF(d, GETDATE(), p.JoiningDate) > 365;
+
+SELECT d.DepartmentName, COUNT(p.PersonID) AS PersonCount
+FROM DEPARTMENT d
+LEFT JOIN PERSON p ON d.DepartmentID = p.DepartmentID
+GROUP BY d.DepartmentName;
+
+SELECT d.DepartmentName, MAX(p.Salary) AS MaxSalary, MIN(p.Salary) AS MinSalary
+FROM PERSON p
+INNER JOIN DEPARTMENT d ON p.DepartmentID = d.DepartmentID
+GROUP BY d.DepartmentName;
+
+
+SELECT p.City, SUM(p.Salary) AS TotalSalary, AVG(p.Salary) AS AvgSalary,
+       MAX(p.Salary) AS MaxSalary, MIN(p.Salary) AS MinSalary
+FROM PERSON p
+GROUP BY p.City;
+
+SELECT AVG(p.Salary) AS AvgSalary
+FROM PERSON p
+WHERE p.City = 'Ahmedabad';
+
+
+SELECT CONCAT(p.PersonName, ' lives in ', p.City, ' and works in ', d.DepartmentName, ' Department') AS Output
+FROM PERSON p
+LEFT JOIN DEPARTMENT d ON p.DepartmentID = d.DepartmentID;
+
+
+
+SELECT CONCAT(p.PersonName, ' earns ', p.Salary, ' from ', d.DepartmentName, ' department monthly') AS Output
+FROM PERSON p
+LEFT JOIN DEPARTMENT d ON p.DepartmentID = d.DepartmentID;
+
+
+SELECT p.City, d.DepartmentName, 
+       SUM(p.Salary) AS TotalSalary, AVG(p.Salary) AS AvgSalary, MAX(p.Salary) AS MaxSalary
+FROM PERSON p
+INNER JOIN DEPARTMENT d ON p.DepartmentID = d.DepartmentID
+GROUP BY p.City, d.DepartmentName;
+
+
+SELECT p.*
+FROM PERSON p
+WHERE p.DepartmentID IS NULL;
+
+
+--===============================================PART C=======================================
+
+SELECT d.DepartmentName, SUM(p.Salary) AS TotalSalary
+FROM PERSON p
+INNER JOIN DEPARTMENT d ON p.DepartmentID = d.DepartmentID
+GROUP BY d.DepartmentName
+HAVING SUM(p.Salary) > 100000;
+
+
+SELECT d.DepartmentName, SUM(p.Salary) AS TotalSalary
+FROM PERSON p
+INNER JOIN DEPARTMENT d ON p.DepartmentID = d.DepartmentID
+GROUP BY d.DepartmentName
+HAVING SUM(p.Salary) > 100000;
+
+
+SELECT d.DepartmentName
+FROM DEPARTMENT d
+INNER JOIN PERSON p ON d.DepartmentID = p.DepartmentID
+GROUP BY d.DepartmentName
+HAVING COUNT(p.PersonID) > 2;
+
+
+UPDATE PERSON
+SET Salary = Salary * 1.10
+WHERE DepartmentID = (SELECT DepartmentID FROM DEPARTMENT WHERE DepartmentName = 'Computer');
+
 
 
 
