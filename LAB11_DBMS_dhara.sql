@@ -61,6 +61,8 @@ INSERT INTO CUSTOMER (customer_id, cust_name, city, grade, salesman_id) VALUES
 
 
 -- part A
+
+use master
 --1
 SELECT ord_no, purch_amt, ord_date, customer_id, salesman_id
 FROM ORDERS
@@ -141,3 +143,134 @@ SELECT ord_date, SUM(purch_amt) AS total_amount
 FROM ORDERS
 GROUP BY ord_date
 HAVING SUM(purch_amt) > (SELECT MAX(purch_amt) FROM ORDERS WHERE ord_date = ORDERS.ord_date) + 1000;
+
+
+--15
+SELECT *
+FROM CUSTOMER
+WHERE EXISTS (SELECT 1 FROM CUSTOMER WHERE city = 'London');
+
+--============================= PART B =======================================
+
+--1 
+SELECT s.salesman_id, s.name, s.city, s.commission
+FROM SALESMAN s
+JOIN CUSTOMER c ON s.salesman_id = c.salesman_id
+GROUP BY s.salesman_id, s.name, s.city, s.commission
+HAVING COUNT(c.customer_id) > 1;
+
+--2
+SELECT s.salesman_id, s.name, s.city, s.commission
+FROM SALESMAN s
+JOIN CUSTOMER c ON s.salesman_id = c.salesman_id
+GROUP BY s.salesman_id, s.name, s.city, s.commission
+HAVING COUNT(c.customer_id) = 1;
+
+--3
+SELECT DISTINCT s.salesman_id, s.name, s.city, s.commission
+FROM SALESMAN s
+JOIN CUSTOMER c ON s.salesman_id = c.salesman_id
+JOIN ORDERS o ON c.customer_id = o.customer_id
+GROUP BY s.salesman_id, s.name, s.city, s.commission
+HAVING COUNT(DISTINCT o.ord_no) > 1;
+
+--4
+SELECT DISTINCT s.salesman_id, s.name, s.city, s.commission
+FROM SALESMAN s
+JOIN CUSTOMER c ON s.salesman_id = c.salesman_id
+WHERE s.city = c.city;
+
+--5
+SELECT DISTINCT s.salesman_id, s.name, s.city, s.commission
+FROM SALESMAN s
+WHERE s.city IN (SELECT DISTINCT city FROM CUSTOMER);
+
+--6
+SELECT DISTINCT s.salesman_id, s.name, s.city, s.commission
+FROM SALESMAN s
+JOIN CUSTOMER c ON s.salesman_id = c.salesman_id
+WHERE s.name < c.cust_name;
+
+--7
+SELECT c1.customer_id, c1.cust_name, c1.city, c1.grade, c1.salesman_id
+FROM CUSTOMER c1
+WHERE c1.grade > ALL (
+    SELECT c2.grade
+    FROM CUSTOMER c2
+    WHERE c2.city = 'New York' AND c2.cust_name < c1.cust_name
+);
+
+--8
+SELECT o1.ord_no, o1.purch_amt, o1.ord_date, o1.customer_id, o1.salesman_id
+FROM ORDERS o1
+WHERE o1.purch_amt > ANY (
+    SELECT o2.purch_amt
+    FROM ORDERS o2
+    WHERE o2.ord_date = '2012-09-10'
+);
+
+--9
+SELECT o.ord_no, o.purch_amt, o.ord_date, o.customer_id, o.salesman_id
+FROM ORDERS o
+WHERE o.purch_amt < (
+    SELECT MAX(o2.purch_amt)
+    FROM ORDERS o2
+    JOIN CUSTOMER c ON o2.customer_id = c.customer_id
+    WHERE c.city = 'London'
+);
+
+--10
+SELECT o.ord_no, o.purch_amt, o.ord_date, o.customer_id, o.salesman_id
+FROM ORDERS o
+WHERE o.purch_amt < ALL (
+    SELECT MAX(o2.purch_amt)
+    FROM ORDERS o2
+    JOIN CUSTOMER c ON o2.customer_id = c.customer_id
+    WHERE c.city = 'London'
+);
+
+--===================================== PART C =========================================
+--1
+SELECT c1.customer_id, c1.cust_name, c1.city, c1.grade, c1.salesman_id
+FROM CUSTOMER c1
+WHERE c1.grade > ALL (
+    SELECT c2.grade
+    FROM CUSTOMER c2
+    WHERE c2.city = 'New York'
+);
+
+
+--2
+SELECT s.name AS salesperson_name, s.city, SUM(o.purch_amt) AS total_order_amount
+FROM SALESMAN s
+JOIN CUSTOMER c ON s.salesman_id = c.salesman_id
+JOIN ORDERS o ON c.customer_id = o.customer_id
+WHERE s.city = c.city
+GROUP BY s.name, s.city;
+
+--3
+SELECT c1.customer_id, c1.cust_name, c1.city, c1.grade, c1.salesman_id
+FROM CUSTOMER c1
+WHERE c1.grade NOT IN (
+    SELECT c2.grade
+    FROM CUSTOMER c2
+    WHERE c2.city = 'London'
+);
+
+--4
+SELECT c1.customer_id, c1.cust_name, c1.city, c1.grade, c1.salesman_id
+FROM CUSTOMER c1
+WHERE c1.grade NOT IN (
+    SELECT c2.grade
+    FROM CUSTOMER c2
+    WHERE c2.city = 'Paris'
+);
+
+--5
+SELECT c1.customer_id, c1.cust_name, c1.city, c1.grade, c1.salesman_id
+FROM CUSTOMER c1
+WHERE c1.grade <> ANY (
+    SELECT c2.grade
+    FROM CUSTOMER c2
+    WHERE c2.city = 'Dallas'
+);
