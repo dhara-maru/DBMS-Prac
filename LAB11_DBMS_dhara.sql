@@ -135,3 +135,9 @@ WHERE purch_amt > (SELECT AVG(purch_amt) FROM ORDERS);
 SELECT ord_no, purch_amt, ord_date, customer_id, salesman_id
 FROM ORDERS
 WHERE purch_amt >= (SELECT AVG(purch_amt) FROM ORDERS);
+
+--14
+SELECT ord_date, SUM(purch_amt) AS total_amount
+FROM ORDERS
+GROUP BY ord_date
+HAVING SUM(purch_amt) > (SELECT MAX(purch_amt) FROM ORDERS WHERE ord_date = ORDERS.ord_date) + 1000;
