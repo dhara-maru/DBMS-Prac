@@ -1,3 +1,4 @@
+use septdhara
 CREATE TABLE Designation (
     DesignationID INT PRIMARY KEY,
     DesignationName VARCHAR(100) NOT NULL UNIQUE
@@ -7,7 +8,7 @@ CREATE TABLE Department (
     DepartmentName VARCHAR(100) NOT NULL UNIQUE
 );
 CREATE TABLE PERSON (
-    WorkerID INT PRIMARY KEY,
+    WorkerID INT PRIMARY KEY IDENTITY(101,1),
     FirstName VARCHAR(100) NOT NULL,
     LastName VARCHAR(100) NOT NULL,
     Salary DECIMAL(8,2) NOT NULL,
@@ -32,289 +33,288 @@ INSERT INTO Designation (DesignationID, DesignationName) VALUES
 (14, 'Manager'),
 (15, 'CEO');
 
-INSERT INTO PERSON (WorkerID, FirstName, LastName, Salary, JoiningDate, DepartmentID, DesignationID) VALUES
-(101, 'Rahul', 'Anshu', 56000, '1990-01-01', 1, 12),
-(102, 'Hardik', 'Hinsu', 18000, '1990-09-25', 2, 11),
-(103, 'Bhavin', 'Kamani', 25000, '1991-05-14', NULL, 11),
-(104, 'Bhoomi', 'Patel', 39000, '2014-02-20', 1, 13),
-(105, 'Rohit', 'Rajgor', 17000, '1990-07-23', 2, 15),
-(106, 'Priya', 'Mehta', 25000, '1990-10-18', 2, NULL),
-(107, 'Neha', 'Trivedi', 18000, '2014-02-20', 3, 15);
+INSERT INTO PERSON ( FirstName, LastName, Salary, JoiningDate, DepartmentID, DesignationID) VALUES
+('Rahul', 'Anshu', 56000, '1990-01-01', 1, 12),
+( 'Hardik', 'Hinsu', 18000, '1990-09-25', 2, 11),
+('Bhavin', 'Kamani', 25000, '1991-05-14', NULL, 11),
+('Bhoomi', 'Patel', 39000, '2014-02-20', 1, 13),
+( 'Rohit', 'Rajgor', 17000, '1990-07-23', 2, 15),
+('Priya', 'Mehta', 25000, '1990-10-18', 2, NULL),
+( 'Neha', 'Trivedi', 18000, '2014-02-20', 3, 15);
 
+--=============== part a ===================
+--delete from person
+create procedure delperson
+@pid int
+as
+begin
+delete from PERSON where WorkerID = @pid
+end
 
---========================== PART A ====================================
---1
---INSERT SP FOR DEPARTMENT
-CREATE PROCEDURE InsertDepartment
-    @deptName VARCHAR(100)
-AS
-BEGIN
-    INSERT INTO Department (DepartmentName) VALUES (@deptName);
-END;
+exec delperson 107
 
---UPDATE SP FOR DEPARTMENT
-CREATE PROCEDURE UpdateDepartment
-    @deptID INT,
-    @deptName VARCHAR(100)
-AS
-BEGIN
-    UPDATE Department 
-    SET DepartmentName = @deptName 
-    WHERE DepartmentID = @deptID;
-END;
+-- delete from department
+create procedure deldept
+@did int
+as
+begin
+delete from Department where DepartmentID = @did
+end
 
---DELETE SP FOR DEPARTMENT
-CREATE PROCEDURE DeleteDepartment
-    @deptID INT
-AS
-BEGIN
-    DELETE FROM Department WHERE DepartmentID = @deptID;
-END;
+exec deldept 4
 
---2
---INSERT, UPDATE, DELETE SP FOR DEIGNATION
---insert sp
-CREATE PROCEDURE InsertDesignation
-    @desgName VARCHAR(100)
-AS
-BEGIN
-    INSERT INTO Designation (DesignationName) VALUES (@desgName);
-END;
+--delete from designation
+create procedure deldesign
+@deid int
+as
+begin
+delete from Designation where DesignationID = @deid
+end
 
+exec deldesign 15
 
---update sp
-CREATE PROCEDURE UpdateDesignation
-    @desgID INT,
-    @desgName VARCHAR(100)
-AS
-BEGIN
-    UPDATE Designation 
-    SET DesignationName = @desgName 
-    WHERE DesignationID = @desgID;
-END;
+--update in person
+create procedure updateperson
+@pid int,
+@fname varchar(50)
+as
+begin
+update PERSON set FirstName = @fname where WorkerID = @pid
+end
 
---delete sp
-CREATE PROCEDURE DeleteDesignation
-    @desgID INT
-AS
-BEGIN
-    DELETE FROM Designation WHERE DesignationID = @desgID;
-END;
+exec updateperson 101, 'Dhara'
 
---INSERT, UPDATE, DELETE SP FOR PERSON
---insert
-CREATE PROCEDURE InsertPerson
-    @fname VARCHAR(100), 
-    @lname VARCHAR(100), 
-    @salary DECIMAL(8,2), 
-    @joinDate DATETIME, 
-    @deptID INT = NULL,  -- Optional parameter
-    @desgID INT = NULL   -- Optional parameter
-AS
-BEGIN
-    INSERT INTO PERSON (FirstName, LastName, Salary, JoiningDate, DepartmentID, DesignationID) 
-    VALUES (@fname, @lname, @salary, @joinDate, @deptID, @desgID);
-END;
+--update in department
+create procedure updatedept
+@did int,
+@dname varchar(50)
+as
+begin
+update Department set DepartmentName = @dname where DepartmentID = @did
+end
 
---update
-CREATE PROCEDURE UpdatePerson
-    @workerID INT, 
-    @fname VARCHAR(100), 
-    @lname VARCHAR(100), 
-    @salary DECIMAL(8,2), 
-    @joinDate DATETIME, 
-    @deptID INT = NULL,  -- Optional parameter
-    @desgID INT = NULL   -- Optional parameter
-AS
-BEGIN
-    UPDATE PERSON 
-    SET FirstName = @fname, LastName = @lname, Salary = @salary, JoiningDate = @joinDate, DepartmentID = @deptID, DesignationID = @desgID
-    WHERE WorkerID = @workerID;
-END;
+exec updatedept 1,'Development'
 
---delete
-CREATE PROCEDURE DeletePerson
-    @workerID INT
-AS
-BEGIN
-    DELETE FROM PERSON WHERE WorkerID = @workerID;
-END;
+--update in designation
+create procedure updatedesign
+@did int,
+@dname varchar(50)
+as
+begin
+update Designation set DesignationName = @dname where DesignationID = @did
+end
 
---2========================
-CREATE PROCEDURE SelectByPrimaryKey
-    @deptID INT,
-    @desgID INT,
-    @workerID INT
-AS
-BEGIN
-    -- Selecting from Department table
-    SELECT *
-    FROM Department
-    WHERE DepartmentID = @deptID;
+exec updatedesign 11,'Developer'
 
-    -- Selecting from Designation table
-    SELECT *
-    FROM Designation
-    WHERE DesignationID = @desgID;
+--insert in person
+create procedure insertperson
+@fname varchar(50),
+@lname varchar,
+@sal int,
+@date date,
+@deptid int,
+@designid int
+as
+begin
+insert into PERSON ( FirstName, LastName, Salary, JoiningDate, DepartmentID, DesignationID)  values ( @fname, @lname, @sal, @date, @deptid, @designid)
+end
 
-    -- Selecting from PERSON table
-    SELECT *
-    FROM PERSON
-    WHERE WorkerID = @workerID;
-END;
+exec insertperson 'Dhara', 'M.', 20000, '04/06/2024', 1, 11
 
+--insert in dept
+create procedure insertdept
+@did int,
+@dname varchar
+as
+begin
+insert into Department (DepartmentID, DepartmentName) values (@did, @dname)
+end
+
+exec insertdept 5,'Testing'
+
+--insert into design
+create procedure insertdesign
+@did int,
+@dname varchar
+as
+begin
+insert into Designation(DesignationID, DesignationName) values (@did, @dname)
+end
+
+exec insertdesign 16,'Worker'
+
+--2==================================
+--select pk for person
+create procedure pkperson1
+@pid int
+as
+begin
+select WorkerID from PERSON where WorkerID = @pid
+end
+
+exec pkperson1 101
+
+--select pk for dept 
+create procedure pkdept1
+@did int
+as
+begin
+select DepartmentID from Department where DepartmentID = @did
+end
+
+exec pkdept1 1
+
+--select pk fro design
+create or alter procedure pkdesign1
+@did int
+as
+begin
+select DesignationID from Designation where DesignationID = @did
+end
+
+exec pkdesign1 11
 
 --3============================
-CREATE PROCEDURE SelectWithJoins
-    @workerID INT
-AS
-BEGIN
-    SELECT 
-        p.WorkerID,
-        p.FirstName,
-        p.LastName,
-        p.Salary,
-        p.JoiningDate,
-        d.DepartmentID,
-        d.DepartmentName,
-        desg.DesignationID,
-        desg.DesignationName
-    FROM 
-        PERSON p
-    LEFT JOIN 
-        Department d ON p.DepartmentID = d.DepartmentID
-    LEFT JOIN 
-        Designation desg ON p.DesignationID = desg.DesignationID
-    WHERE 
-        p.WorkerID = @workerID;
-END;
+create procedure joinpro
+as
+begin
+select p.WorkerID, p.FirstName, p.LastName, p.Salary, p.JoiningDate, d.DepartmentID, de.DesignationID, d.Departmentname, de.DesignationName
+from PERSON p
+left join Department d
+on p.DepartmentID = d.DepartmentID
+left join Designation de
+on p.DesignationID = de.DesignationID
+end
 
---4==============================
-CREATE PROCEDURE SelectFirstThreePersons
-AS
-BEGIN
-    SELECT TOP 3 
-        WorkerID,
-        FirstName,
-        LastName,
-        Salary,
-        JoiningDate,
-        DepartmentID,
-        DesignationID
-    FROM 
-        PERSON
-    ORDER BY 
-        WorkerID;  
-END;
+exec joinpro
 
+--4=======================
+create procedure showtop3
+as
+begin
+select top 3 * from PERSON
+end
 
---============================ PART B ==============================
+exec showtop3
+
+--========================= PART B ========================
 --1
-CREATE PROCEDURE GetWorkersByDepartmentName
-    @deptName VARCHAR(100)
-AS
-BEGIN
-    SELECT 
-        p.WorkerID,
-        p.FirstName,
-        p.LastName,
-        p.Salary,
-        p.JoiningDate,
-        d.DepartmentID,
-        d.DepartmentName
-    FROM 
-        PERSON p
-    JOIN 
-        Department d ON p.DepartmentID = d.DepartmentID
-    WHERE 
-        d.DepartmentName = @deptName;
-END;
+create or alter procedure partb1
+@deptname varchar(50)
+as
+begin
+select p.WorkerID, p.FirstName, d.DepartmentName
+from PERSON p
+JOIN Department d
+on p.DepartmentID = d.DepartmentID
+where d.DepartmentName = @deptname
+end
 
+exec partb1 'IT'
 
 --2
-CREATE PROCEDURE GetWorkersByDepartmentAndDesignation
-    @deptName VARCHAR(100),
-    @desgName VARCHAR(100)
-AS
-BEGIN
-    SELECT 
-        p.FirstName,
-        p.Salary,
-        p.JoiningDate,
-        d.DepartmentName
-    FROM 
-        PERSON p
-    JOIN 
-        Department d ON p.DepartmentID = d.DepartmentID
-    JOIN 
-        Designation desg ON p.DesignationID = desg.DesignationID
-    WHERE 
-        d.DepartmentName = @deptName
-        AND desg.DesignationName = @desgName;
-END;
-EXEC GetWorkersByDepartmentAndDesignation @deptName = 'IT', @desgName = 'Jobber';
+create procedure partb2
+@deptname varchar(50),
+@designname varchar(50)
+as
+begin
+select p.FirstName, p.Salary, p.JoiningDate, d.DepartmentName, de.DesignationName
+from PERSON p
+left join Department d
+on p.DepartmentID = d.DepartmentID
+left join Designation de
+on p.DesignationID = de.DesignationID
+where d.DepartmentName = @deptname AND de.DesignationName = @designname
+end
 
---4
-CREATE PROCEDURE GetDepartmentSalaryStatistics
-AS
-BEGIN
-    SELECT 
-        d.DepartmentName,
-        MAX(p.Salary) AS MaxSalary,
-        MIN(p.Salary) AS MinSalary,
-        SUM(p.Salary) AS TotalSalary
-    FROM 
-        PERSON p
-    JOIN 
-        Department d ON p.DepartmentID = d.DepartmentID
-    GROUP BY 
-        d.DepartmentName;
-END;
-
---5
-CREATE PROCEDURE GetDesignationSalaryStatistics
-AS
-BEGIN
-    SELECT 
-        desg.DesignationName,
-        AVG(p.Salary) AS AverageSalary,
-        SUM(p.Salary) AS TotalSalary
-    FROM 
-        PERSON p
-    JOIN 
-        Designation desg ON p.DesignationID = desg.DesignationID
-    GROUP BY 
-        desg.DesignationName;
-END;
-
---====================== PART C ============================
---1
-CREATE PROCEDURE GetPersonCountByDepartmentName
-    @deptName VARCHAR(100)
-AS
-BEGIN
-    SELECT 
-        COUNT(p.WorkerID) AS PersonCount
-    FROM 
-        PERSON p
-    JOIN 
-        Department d ON p.DepartmentID = d.DepartmentID
-    WHERE 
-        d.DepartmentName = @deptName;
-END;
+exec partb2 'IT', 'Jobber'
 
 --3
-CREATE PROCEDURE GetDepartmentPersonCount
-AS
-BEGIN
-    SELECT 
-        d.DepartmentID,
-        d.DepartmentName,
-        COUNT(p.WorkerID) AS PersonCount
-    FROM 
-        Department d
-    LEFT JOIN 
-        PERSON p ON d.DepartmentID = p.DepartmentID
-    GROUP BY 
-        d.DepartmentID, d.DepartmentName;
-END;
+create procedure partb3
+@fname varchar(50)
+as
+begin
+select p.FirstName, p.Salary, p.JoiningDate, d.DepartmentName, de.DesignationName
+from PERSON p
+left join Department d
+on p.DepartmentID = d.DepartmentID
+left join Designation de
+on p.DesignationID = de.DesignationID
+where p.FirstName = @fname
+end
+
+exec partb3 'Rahul'
+
+--4
+create or alter procedure partb4
+as
+begin
+select d.DepartmentName, MIN(p.Salary) as MinSalary, MAX(p.Salary) as MaxSalary, SUM(p.Salary) as TotalSalary
+from PERSON p
+join Department d
+on p.DepartmentID = d.DepartmentID
+group by d.DepartmentName
+end
+
+exec partb4
+
+--5
+create procedure partb5
+as
+begin
+select d.DesignationName, AVG(p.Salary) as AvgSalary, SUM(p.Salary) as TotalSalary
+from PERSON p
+join Designation d
+on p.DesignationID = d.DesignationID
+group by d.DesignationName
+end
+
+exec partb5
+
+--============================== PART C ========================
+--1
+create procedure partc1
+@dname varchar(50)
+as
+begin
+select d.Departmentname, COUNT(p.WorkerID)
+from Department d
+join PERSON p
+on d.DepartmentID = p.DepartmentID
+group by d.DepartmentName
+end
+
+exec partc1 'IT'
+
+--2
+create or alter procedure partc2
+@deptname varchar(50),
+@designname varchar(50)
+as
+begin
+select p.FirstName, p.Salary, p.JoiningDate, d.DepartmentName, de.DesignationName
+from PERSON p
+left join Department d
+on p.DepartmentID = d.DepartmentID
+left join Designation de
+on p.DesignationID = de.DesignationID
+where (d.DepartmentName IS NULL AND de.DesignationName = @designname) OR (de.DesignationName IS NULL AND d.DepartmentName = @deptname)
+end
+
+exec partc2 'IT', NULL
+exec partc2 NULL, 'Jobber'
+exec partc2 'IT', 'Jobber'
+exec partc2 NULL, NULL
+
+--3
+create or alter procedure finalans
+as
+begin
+select d.DepartmentID, d.Departmentname, COUNT(p.WorkerID) as WorkerCount
+from PERSON p
+join Department d
+on p.DepartmentID = d.DepartmentID
+group by d.DepartmentID, d.DepartmentName
+end
+
+exec finalans
