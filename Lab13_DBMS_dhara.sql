@@ -1,143 +1,141 @@
---LAB 13 DBMS dhara
---========================= PART A ===============================
---1=======================
-CREATE TRIGGER trg_RecordAffected
-ON Person2
-AFTER INSERT, UPDATE, DELETE
+CREATE TABLE Person (
+    PersonID int PRIMARY KEY ,
+    PersonName varchar(100) NOT NULL,
+    Salary decimal(8,2) NOT NULL,
+    JoiningDate datetime NOT NULL,
+    City varchar(100) NOT NULL,
+    Age int,
+    BirthDate datetime NOT NULL
+);
+
+create table PersonLog
+(PLogID int Primary key IDENTITY(101,1),
+PersonID int not null,
+PersonName varchar(250) not null,
+Operation varchar(50) not null,
+UpdateDate DateTime not null)
+
+--===================PART A===============
+
+--1--------------------------
+CREATE TRIGGER TR_PERSON1
+ON Person
+AFTER INSERT,UPDATE,DELETE
 AS
 BEGIN
-    PRINT 'Record is Affected.'
-END;
+	PRINT'RECORD  IS AFFECTED'
+END
 
---2============================
-CREATE TRIGGER trg_LogPersonOperations
-ON Person2
-AFTER INSERT, UPDATE, DELETE
-AS
-BEGIN
-    DECLARE @Operation VARCHAR(50);
-    
-    IF EXISTS (SELECT * FROM inserted) AND EXISTS (SELECT * FROM deleted)
-        SET @Operation = 'UPDATE';
-    ELSE IF EXISTS (SELECT * FROM inserted)
-        SET @Operation = 'INSERT';
-    ELSE IF EXISTS (SELECT * FROM deleted)
-        SET @Operation = 'DELETE';
-    
-    INSERT INTO PersonLog (PLogID, PersonID, PersonName, Operation, UpdateDate)
-    SELECT 
-        (SELECT ISNULL(MAX(PLogID), 0) + 1 FROM PersonLog),  -- Generate new PLogID
-        PersonID,
-        PersonName,
-        @Operation,
-        GETDATE()
-    FROM 
-        (SELECT * FROM inserted UNION SELECT * FROM deleted) AS AllRows;
-END;
+INSERT INTO Person VALUES(4,'Deep',10000,'1-1-22','RAJKOT',21,'1-1-2000')
+INSERT INTO Person VALUES(5,'Meet',10000,'1-1-22','RAJKOT',23,'1-1-2002')
+INSERT INTO Person VALUES(6,'Jay',10000,'1-1-22','RAJKOT',23,'1-1-1999')
 
---===================== PART B =========================
---1=======================
-CREATE TRIGGER trg_LogPersonOperationsInstead
-ON Person2
-INSTEAD OF INSERT, UPDATE, DELETE
-AS
-BEGIN
-    DECLARE @Operation VARCHAR(50);
-    
-    -- Log INSERT operation
-    IF EXISTS (SELECT * FROM inserted) AND NOT EXISTS (SELECT * FROM deleted)
-    BEGIN
-        SET @Operation = 'INSERT';
-        INSERT INTO PersonLog (PLogID, PersonID, PersonName, Operation, UpdateDate)
-        SELECT 
-            (SELECT ISNULL(MAX(PLogID), 0) + 1 FROM PersonLog), 
-            PersonID,
-            PersonName,
-            @Operation,
-            GETDATE()
-        FROM inserted;
+UPDATE Person
+SET Salary=50000
+WHERE PersonName='DEEP'
 
-        -- Actual insert to Person2 table
-        INSERT INTO Person2 (PersonName, Salary, JoiningDate, City, Age, BirthDate)
-        SELECT PersonName, Salary, JoiningDate, City, Age, BirthDate FROM inserted;
-    END
-    
-    -- Log UPDATE operation
-    IF EXISTS (SELECT * FROM inserted) AND EXISTS (SELECT * FROM deleted)
-    BEGIN
-        SET @Operation = 'UPDATE';
-        INSERT INTO PersonLog (PLogID, PersonID, PersonName, Operation, UpdateDate)
-        SELECT 
-            (SELECT ISNULL(MAX(PLogID), 0) + 1 FROM PersonLog), 
-            PersonID,
-            PersonName,
-            @Operation,
-            GETDATE()
-        FROM inserted;
-
-        -- Actual update to Person2 table
-        UPDATE Person2
-        SET 
-            PersonName = i.PersonName,
-            Salary = i.Salary,
-            JoiningDate = i.JoiningDate,
-            City = i.City,
-            Age = i.Age,
-            BirthDate = i.BirthDate
-        FROM Person2 p
-        INNER JOIN inserted i ON p.PersonID = i.PersonID;
-    END
-
-    -- Log DELETE operation
-    IF EXISTS (SELECT * FROM deleted)
-    BEGIN
-        SET @Operation = 'DELETE';
-        INSERT INTO PersonLog (PLogID, PersonID, PersonName, Operation, UpdateDate)
-        SELECT 
-            (SELECT ISNULL(MAX(PLogID), 0) + 1 FROM PersonLog), 
-            PersonID,
-            PersonName,
-            @Operation,
-            GETDATE()
-        FROM deleted;
-
-        -- Actual delete from Person2 table
-        DELETE FROM Person2
-        WHERE PersonID IN (SELECT PersonID FROM deleted);
-    END
-END;
+Delete from Person
+where PersonName='Deep'
 
 
---2========================
-CREATE TRIGGER trg_UppercasePersonName
-ON Person2
+--2------------------------
+-- PERSONLOG INSERT
+CREATE TRIGGER TR_PERSONLOGG
+ON Person
 AFTER INSERT
 AS
 BEGIN
-    UPDATE Person2
-    SET PersonName = UPPER(PersonName)
-    FROM Person2 p
-    INNER JOIN inserted i ON p.PersonID = i.PersonID;
-END;
+	INSERT INTO PERSONLOG(PERSONID,PERSONNAME,OPERATION,UPDATEDATE)
+	SELECT PERSONID,PERSONNAME,'INSERTED',GETDATE() FROM inserted
+END
 
---============================ PART C ============================
---1================
-CREATE TRIGGER trg_CalculateAge
-ON Person2
-AFTER INSERT
+INSERT INTO Person VALUES(7,'XYZ',10000,'1-1-22','RAJKOT',23,'1-1-1999')
+
+
+SELECT * FROM  PERSONLOG
+
+
+-- PERSONLOG UPDATE
+CREATE TRIGGER TR_PERSONLOGG_UPDATE
+ON Person
+AFTER UPDATE
 AS
 BEGIN
-    UPDATE Person2
-    SET Age = DATEDIFF(YEAR, BirthDate, GETDATE())
-    FROM Person2 p
-    INNER JOIN inserted i ON p.PersonID = i.PersonID;
-END;
+	INSERT INTO PERSONLOG(PERSONID,PERSONNAME,OPERATION,UPDATEDATE)
+	SELECT PERSONID,PERSONNAME,'UPDATED',GETDATE() FROM inserted
+END
 
---2======================
-CREATE TRIGGER trg_DeletePersonLog
-ON PersonLog
-FOR DELETE
+UPDATE Person
+SET Salary=50000
+WHERE PersonName='XYZ'
+
+SELECT * FROM  PERSONLOG
+
+--PERSONLOG DELETE
+CREATE TRIGGER TR_PERSONLOG_DELETE
+ON PERSON
+AFTER DELETE
 AS
 BEGIN
-    PRINT 'Record deleted successfully from PersonLog';
-END;
+	INSERT INTO PERSONLOG(PERSONID,PERSONNAME,OPERATION,UPDATEDATE)
+	SELECT PERSONID,PERSONNAME,'DELETED',GETDATE() FROM deleted
+END
+
+Delete from Person
+where PersonName='MEET'
+
+SELECT * FROM  PERSONLOG
+
+
+---------------------------------PART B------------------------------------------------------
+--1. Insetad Of Insert
+CREATE TRIGGER TR_PERSONLOG_INST_INSERT
+ON PERSON
+INSTEAD OF INSERT
+AS
+BEGIN
+	INSERT INTO PERSONLOG(PERSONID,PERSONNAME,OPERATION,UPDATEDATE)
+	SELECT PERSONID,PERSONNAME,'INSERTED',GETDATE() FROM inserted
+END
+
+INSERT INTO Person VALUES(8,'XYZ',10000,'1-1-22','RAJKOT',23,'1-1-1999')
+
+SELECT * FROM  PERSONLOG
+
+-- Insetad of update
+CREATE TRIGGER TR_PERSONLOG_INST_UPDATE
+ON PERSON
+INSTEAD OF UPDATE
+AS
+BEGIN
+	INSERT INTO PERSONLOG(PERSONID,PERSONNAME,OPERATION,UPDATEDATE)
+	SELECT PERSONID,PERSONNAME,'UPDATED',GETDATE() FROM inserted
+END
+
+UPDATE Person
+SET Salary=50000
+WHERE PersonName='JAY'
+
+SELECT * FROM  PERSONLOG
+
+-- Insetad of Delete
+CREATE TRIGGER TR_PERSONLOG_INST_DELETE
+ON PERSON
+INSTEAD OF DELETE
+AS
+BEGIN
+	INSERT INTO PERSONLOG(PERSONID,PERSONNAME,OPERATION,UPDATEDATE)
+	SELECT PERSONID,PERSONNAME,'DELETED',GETDATE() FROM deleted
+END
+
+Delete from Person
+where PersonName='JAY'
+
+SELECT * FROM  PERSONLOG
+
+
+--2 UPPERCASE 
+
+
+--=============== PART C =======================
+--1
