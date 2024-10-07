@@ -1,0 +1,39 @@
+use dbname      //create or use existing db
+show dbs        //show databases
+db              //check current db
+db.createCollection('Person')     //creates collection names Person
+db.Person.insertOne({name : 'Dhara', age : 20, city : 'Morbi'})     //inserts one document
+db.Person.insertOne({name : 'Dhara', age : 20, city : 'Morbi'}, {name : 'Hetvi', age : 18})     //inserts many docs
+show collections        //displays collections in db
+db.Person.find()        //displays all data of person collection
+db.Person.findOne()     //shows first doc
+
+-----------------------------------------------------
+db.Person.find({ $and [ {Branch : 'CE'}, {SPI : 7} ]})      //shows data with condition AND
+db.Person.find({ $or [ {Branch : 'CE'}, {SPI : 7} ]})       //OR condition
+db.Person.find({ $and [ {Branch : {$eq : 'CE'}}, {SPI : 7} ]})      //equal condition
+db.Person.find({ $and [ {Branch : {$eq : 'CE'}}, {SPI : {$gt : 7} } ]})     //greater than 
+db.Person.find({ $and [ {Branch : {$eq : 'CE'}}, {SPI : {$lt : 7} } ]})     //less than 
+db.Person.find({ $and [ {Branch : {$in : [ 'CE' , 'IT' ]}}, {SPI : {$gt : 7} } ]})     //IN condition
+-----------------------------------------------------
+
+db.Person.find({ $or [ {Branch : 'CE'}, {SPI : 7} ]}, {name : 1})       //condition with field 'name' only
+db.Person.find({ $or [ {Branch : 'CE'}, {SPI : 7} ]}, {name : 1, age : 1, id : 0})       //condition with field 'name', 'age'. it will not show 'id'
+
+---------------------------------------------------------
+
+db.Person.find({ $and [ {Branch : {$eq : 'CE'}}, {SPI : 7} ]}) 
+db.Person.find().sort({age : -1})       //desc sort by column age
+db.Person.find().sort({age : 1})       //Ascending sort by column age
+db.Person.drop()        //drops collection Person
+db.Person.renameCollection('People')        //to rename person collection with name 'people'
+
+------------------------------------------------------------
+db.Person.find().limit(3)       //top 3 records only
+db.person.find().skip(2).limit(3)       //skips first 2 and shows 3 records
+db.person.find().limit(3).skip(2)       //does the same as above
+db.Person.find().skip(3)        //skips first 3
+
+------------------------------------------------------------
+db.users.deleteOne({ name: "John" })        //deletes with name filter
+db.users.deleteMany({ age: { $lt: 18 } })   //deletes all rrecords with age less than 18
