@@ -34,6 +34,40 @@ db.person.find().skip(2).limit(3)       //skips first 2 and shows 3 records
 db.person.find().limit(3).skip(2)       //does the same as above
 db.Person.find().skip(3)        //skips first 3
 
-------------------------------------------------------------
+---------------------------------------------------------------
+
 db.users.deleteOne({ name: "John" })        //deletes with name filter
 db.users.deleteMany({ age: { $lt: 18 } })   //deletes all rrecords with age less than 18
+---------------------------------------------------------------
+
+db.Person.updateOne({no : 4}, {$set :  {name : 'Jenisha'}})     //set name 'Jenisha' where no is 4
+
+db.Person.updateMany({age : 20}, {$set :  {city : 'Morbi'}})    //set field city : Morbi wherever age is 20. creates new if city doesn't exist
+
+db.Person.updateMany({}, {$set : {rank : 2}})       //alter (added new column named 'rank' everywhere bcoz we haven't gave it any condition)
+
+db.Person.updateMany({}, {$inc : {rank : 3}})       //incremented rank +3 everywhere 
+
+db.Person.updateOne(
+    { name: "Jenisha" },
+    { $set: { age: 30, email: "hellowjenubolu6u@lmao.com" } },
+    { upsert: true }
+);                                              //'upsert' command. adds new column if doesn't exit (email) and also updated the age column
+
+db.Person.updateOne(
+    { name: "Dhara" }, // Filter to find the document
+    { $currentDate: { lastUpdated: true } } // Set lastUpdated to the current date
+);
+
+db.Person.updateOne(
+    { name: "Jenisha" }, // Filter to find the document
+    { $rename: { email: "contactEmail" } } // Rename email to contactEmail
+);
+
+db.Person.updateMany({ name : "Jenisha"}, {$unset : {contactEmail : ""}})       //to remove (unset) a column
+
+-------------------------------------------------------------------
+
+db.Person.find({}, { _id: 1 }).forEach(doc => print(doc._id.getTimestamp()));       //retrives time stamp from object id.
+
+
