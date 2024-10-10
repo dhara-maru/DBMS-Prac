@@ -70,4 +70,16 @@ db.Person.updateMany({ name : "Jenisha"}, {$unset : {contactEmail : ""}})       
 
 db.Person.find({}, { _id: 1 }).forEach(doc => print(doc._id.getTimestamp()));       //retrives time stamp from object id.
 
+--------------------------------------------------------------------
+db.createCollection("students", {capped : true, size : 5242880, max : 100 })        //create capped collection
+
+db.students.insertOne({ name : 'Durga', age : 22, phone : [1234567890, 0987654321]})        //multivalued document
+db.students.find({phone : 1234567890})      //finding multivalued doc
+
+db.students.insertOne({ name : { fname : 'Rani', lname : 'Mehra'}, age : 26})       //composite (Nested) doc
+db.students.find({ 'name.lname' : 'Mehra'})     //finding a composite (Nested) doc
+
+select * from students for json auto        //this command in SSMS will retrive the json format of student table data 
+-----------------------------------------------------------------------
+
 
