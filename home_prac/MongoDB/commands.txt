@@ -82,4 +82,18 @@ db.students.find({ 'name.lname' : 'Mehra'})     //finding a composite (Nested) d
 select * from students for json auto        //this command in SSMS will retrive the json format of student table data 
 -----------------------------------------------------------------------
 
+# RegEx queries
 
+db.person.find({ name : { $regex : /Dha/}})      //LITERAL STRING : finds 'Dha' sequencially
+db.person.find({ name : { $regex : /D.a/}})     //DOT . : finds 'D' followed by any character and then 'a'
+db.person.find({ name : { $regex : /^Ma/}})     //CARET ^ : finds where the field starts with "Ma"
+db.person.find({ name : { $regex : /ra$/}})     //DOLLAR $ : finds where the string ends with "ra"
+db.person.find({ name : { $regex : /[aei]/}})   //SQUARE BRACKETS [] : finds where contains any letter inside the square brackets
+db.person.find({ name : { $regex : /[^aei]/}})   //NOT IN SQUARE BRACKETS [^] : finds where does NOT contain any letter inside the square brackets
+db.person.find({ name : { $regex : /ab*c/}})     //ASTRISK * : finds where the field contains "a" followed by ZERO or more "b" characters and then "c" (e.g., "ac", "abc", "abbc").
+db.person.find({ name : { $regex : /ab+c/}})     //PLUS + : finds where the field contains "a" followed by ONE or more "b" characters and then "c" (e.g., "ac", "abc", "abbc").
+db.person.find({ name : { $regex : /a{2}/}})     //CURLY BRACES {} : finds where the field contains exactly two "a" characters (e.g., "aa", "baab").
+db.person.find({ name : { $regex : /a{1,3}/}})   //WITH RANGE : finds where the field contains between 1 and 3 "a" characters (e.g., "a", "aa", "aaa", but not "aaaa").
+db.person.find({ name : { $regex: /\./ }})      //ESCAPE CHAR : finds where the field contains a period (e.g., "1.0", "abc.def").
+db.person.find({ name :  { $regex: /\d/ }})     //DIGIT /d : finds where the field contains any digit (e.g., "1", "abc2").
+db.person.find({ name :  { $regex: /\s/ }})     //WHITE SPACE /s : finds where the field contains any whitespace character (e.g., "hello world").
