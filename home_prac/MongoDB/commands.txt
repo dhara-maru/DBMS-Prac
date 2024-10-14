@@ -97,3 +97,27 @@ db.person.find({ name : { $regex : /a{1,3}/}})   //WITH RANGE : finds where the 
 db.person.find({ name : { $regex: /\./ }})      //ESCAPE CHAR : finds where the field contains a period (e.g., "1.0", "abc.def").
 db.person.find({ name :  { $regex: /\d/ }})     //DIGIT /d : finds where the field contains any digit (e.g., "1", "abc2").
 db.person.find({ name :  { $regex: /\s/ }})     //WHITE SPACE /s : finds where the field contains any whitespace character (e.g., "hello world").
+
+----------------------------------------------------------
+1.AGGREGATE 
+db.collection.aggregate([
+  { $match: { status: "active" } },  // Filters documents with status "active"
+  { $group: { _id: "$category", total: { $sum: 1 } } },  // Groups by "category" and counts documents
+  { $sort: { total: -1 } }  // Sorts in descending order by "total"
+])
+
+2.GROUP BY
+db.collection.aggregate([
+  { $group: { _id: "$department", totalEmployees: { $sum: 1 } } }  // Groups by "department" and counts total employees
+])
+
+3.SORT 
+db.collection.aggregate([
+  { $sort: { age: 1 } }  // Sorts the documents by "age" in ascending order
+])
+
+4.HAVING ($match after $group)
+db.collection.aggregate([
+  { $group: { _id: "$department", totalEmployees: { $sum: 1 } } },  // Groups by "department"
+  { $match: { totalEmployees: { $gt: 10 } } }  // Filters departments with more than 10 employees (acts like HAVING)
+])
