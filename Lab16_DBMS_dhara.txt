@@ -1,0 +1,70 @@
+1.
+db.DEPOSIT.find();
+
+2.
+db.DEPOSIT.find().pretty();
+
+3.db.DEPOSIT.findOne();
+
+4.
+db.DEPOSIT.insertOne({ ACTNO: 109, CNAME: "KIRTI", BNAME: "VIRAR", AMOUNT: 3000.00, ADATE: "1997-05-03" });
+
+5.
+db.DEPOSIT.insertMany([
+    { ACTNO: 110, CNAME: "MITALI", BNAME: "ANDHERI", AMOUNT: 4500.00, ADATE: "1995-09-04" },
+    { ACTNO: 111, CNAME: "RAJIV", BNAME: "NEHRU PLACE", AMOUNT: 7000.00, ADATE: "1998-10-02" }
+]);
+
+6.
+db.DEPOSIT.find({}, { CNAME: 1, BNAME: 1, AMOUNT: 1, _id: 0 });
+
+7.
+db.DEPOSIT.find().sort({ CNAME: 1 });
+
+8.
+db.DEPOSIT.find().sort({ BNAME: -1 });
+
+9.
+db.DEPOSIT.find().sort({ ACTNO: 1, AMOUNT: -1 });
+
+10.
+db.DEPOSIT.find().limit(2);
+
+11.
+db.DEPOSIT.find().skip(2).limit(1);
+
+12.
+db.DEPOSIT.find().skip(5).limit(2);
+
+13.
+db.DEPOSIT.countDocuments();
+
+14.
+db.DEPOSIT.find().limit(1);
+
+15.
+db.DEPOSIT.find().sort({ AMOUNT: -1 });
+
+------------------ PART B ----------------------------
+
+1.
+db.DEPOSIT.insertOne({ ACTNO: 112, CNAME: "MANISH", BNAME: "ANDHERI", AMOUNT: 8000.00, ADATE: "1998-05-09" });
+
+2.
+db.DEPOSIT.find().skip(8).limit(1);
+
+3.
+db.DEPOSIT.find().skip(10).limit(2);
+
+--------------------- PART C ---------------------------
+1.
+db.DEPOSIT.find().sort({ AMOUNT: 1, BNAME: -1 });
+
+2.
+db.DEPOSIT.find().limit(5);
+
+3.
+db.DEPOSIT.deleteMany({});
+
+4.
+db.dropDatabase();
