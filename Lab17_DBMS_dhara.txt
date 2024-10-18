@@ -1,0 +1,108 @@
+
+--------------------------- LAB 17 PART A ---------------------------------
+1.
+db.EMPLOYEE.find({GENDER : 'Male'})
+2.
+db.EMPLOYEE.find({City : 'London'})
+
+3.
+db.EMPLOYEE.find({Salary : {$gt : 5000}})
+
+4.
+db.EMPLOYEE.find({'JoiningDate' : {$lt : new Date('2015-01-01')}})
+
+5.
+db.EMPLOYEE.find({'JoiningDate' : {$lt : new Date('2015-01-01')}})
+
+
+6.
+db.EMPLOYEE.find({City : {$in : ['London', 'New York']}})
+
+7.
+db.EMPLOYEE.find({City : {$nin : ['London', 'New York']}})
+
+8.
+db.EMPLOYEE.find({City : 'London'}, {EID : 1})
+
+
+9.db.EMPLOYEE.find({City : 'New York'}).limit(2)
+
+10. db.EMPLOYEE.find({City : 'London'}).limit(2).skip(2)
+
+11.db.EMPLOYEE.find({GENDER : 'Male', City : 'Sydney'})
+
+12.db.EMPLOYEE.find({City : {$in : ['London', 'Sydney']}}, {EID : 1, ENAME : 1, City : 1, Salary:1 })
+
+13. db.EMPLOYEE.find({Salary : {$gt : 7000}}, {ENAME : 1, City : 1, Salary:1} )
+
+14. db.EMPLOYEE.find({ENAME : {$regex : '^E'}})
+
+15. db.EMPLOYEE.find({City : {$regex : '^[SM]'}})
+
+16. db.EMPLOYEE.find({ENAME : {$regex : '[A-M]'}})
+
+17. db.EMPLOYEE.find({City : {$regex : 'ney$'}})
+
+18. db.EMPLOYEE.find({SNAME : /n/i})
+
+19.
+
+20. 
+
+21. db.EMPLOYEE.find({ENAME : {$regex : '^Phi'}}, {EID : 1, ENAME : 1, City : 1, Salary : 1})
+
+23. db.EMPLOYEE.find({City : {$nin : ['London', 'New York']}}, { ENAME : 1, City : 1, JoiningDate : 1})
+
+24. db.EMPLOYEE.deleteOne({City : 'New York'})
+
+25. db.EMPLOYEE.updateOne({ENAME : 'Nick'}, {$set : { ENAME : "Naysa", Gender : "Female"}})
+
+------------------- PART B Lab 17 --------------------------------
+1. db.STUDENT.find({GENDER : 'Female'})
+
+2.db.STUDENT.find({CITY : 'Rajkot'})
+
+3. db.STUDENT.find({SEM : 7})
+
+4. db.STUDENT.find({SEM : {$ne : 3}})
+
+5. db.STUDENT.find({ROLLNO : {$gt : 107}})
+
+6. db.STUDENT.find({CITY : {$in : ['Jamnagar', 'Baroda']}})
+
+7. db.STUDENT.find({FEES : {$lt : 9000}})
+
+8. db.STUDENT.find({DEPARTMENT : 'Mechanical'}, {ROLLNO : 1})
+
+9. db.STUDENT.find({CITY : 'Baroda'}).limit(2)
+
+10. db.STUDENT.find({GENDER : 'Male', SEM : 3})
+
+11.
+
+12. db.STUDENT.find({SNAME : {$regex : '^K'}})
+
+13. db.STUDENT.find({SNAME : {$regex : '^[ZD]'}})
+
+14. db.STUDENT.find({City : {$regex : '^[AR]'}})
+
+16. db.STUDENT.find({DEPARTMENT : {$regex : '^C'}})
+
+17. db.STUDENT.find({CITY : {$regex : '[med]'}}, {SNAME : 1, SEM : 1, FEES : 1, DEPARTMENT : 1})
+
+18. db.STUDENT.find({CITY : {$nin : ['Rajkot', 'Baroda']}}, {SNAME : 1, SEM : 1, FEES : 1, DEPARTMENT : 1})
+
+19. db.STUDENT.deleteOne({CITY : 'Jamnagar'})
+
+20. db.EMPLOYEE.updateOne({ENAME : 'Krish'}, {$set : { ENAME : "Fenny", Gender : "Female"}})
+
+------------------- PART C ---------------------
+1. db.STUDENT.find({CITY : 'Ahmedabad'}).skip(2).limit(2)
+
+2. db.STUDENT.find({CITY : 'Baroda', DEPARTMENT : 'CE'}, {SNAME : 1, SEM : 1, FEES : 1, DEPARTMENT : 1})
+
+3. db.STUDENT.find({CITY : {$regex : 'oda$'}})
+
+4. db.STUDENT.find({SNAME : /v/i})
+
+5. db.STUDENT.find({SNAME : {$regex : '^V...'}})
