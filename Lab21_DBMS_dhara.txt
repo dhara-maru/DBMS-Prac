@@ -1,0 +1,27 @@
+--------------------  LAB 21 REGEX Part A -----------------------------
+1. db.customer.find({city : {$regex : 'L.nd..'}})
+2. db.customer.find({city : {$regex : 'L'}})
+3. db.customer.find({name : {$not : {$regex : 'l'}}})
+4. db.customer.find({name : {$regex : '^La'}})
+5. db.customer.find({name : {$not : {$regex : '^La'}}})
+6. db.customer.find({name : {$regex : '^[AEIOU]'}})
+7. db.customer.find({name : {$regex : '^[^AEIOU]'}})
+8. db.customer.find({name : {$regex : '^[A-DX-Z]'}})
+9. db.customer.find({name : {$not : {$regex : '^[A-DX-Z]'}}})
+10. db.customer.find({name : {$regex : '^[^AEIOU$]'}})
+
+
+------------------ LAB 21 REGEX Part B --------------------------
+1. db.customer.find({name : {$regex : '^[AB]'}})
+2. db.customer.find({name : {$regex : '^[ACT]'}})
+3. db.customer.find({name : {$regex : '^[A-D]'}})
+4. db.customer.find({name : {$regex : 'a$'}})
+5. db.customer.find({name : {$not : {$regex : 'a$'}}})
+
+
+---------------------- LAB 21 REGEX Part C --------------------------
+1.db.customer.find({name : {$regex : '^B.*s$'}})
+2. db.customer.find({name : {$regex : 'or'}})
+3. db.customer.find({ name: { $regex: '^A.{2,}' });
+4. db.customer.find({ name: { $regex: '^.r' });
+5. db.customer.find({country : 'Spain'})
