@@ -1,0 +1,18 @@
+------------------------- LAB 18 Part A --------------------------------
+1. db.DEPOSIT.find()
+2. db.BORROW.find()
+3. db.CUSTOMERS.find()
+4. db.BORROW.insertOne({ LOANNO: 550, CNAME: "JAY", BNAME: "AJNI" })
+5. db.DEPOSIT.find({}, {ACTNO : 1, CNAME : 1, BNAME : 1, AMOUNT : 1, _id : 0})
+6. db.BORROW.find({}, {LOANNO : 1, AMOUNT : 1, _id:0})
+7. db.BORROW.find({BNAME : 'ANDHERI'})
+8. db.DEPOSIT.find({ACTNO : 106}, {ACTNO : 1, AMOUNT : 1, _id : 0})
+9. db.BORROW.find({AMOUNT : {$gt : 5000}}, {CNAME : 1, _id : 0})
+10. db.DEPOSIT.find({ADATE : {$gt : new Date('1-12-96')}}, {CNAME : 1, _id : 0})
+
+----------------------------- LAB 18 Part B ----------------------------------
+11. db.DEPOSIT.find({ACTNO : {$lt : 105}})
+12. db.CUSTOMERS.find({CITY : {$in : ['NAGPUR', 'DELHI']}})
+13. db.DEPOSIT.find({AMOUNT : {$gt : 4000}, ACTNO : {$lt : 105}})
+14. db.DEPOSIT.find({AMOUNT : {$gte : 3000, $lte : 8000}})
+15. db.DEPOSIT.find({BNAME : {$nin : ['ANDHERI']}})
