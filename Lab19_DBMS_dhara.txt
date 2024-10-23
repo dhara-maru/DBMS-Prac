@@ -1,0 +1,26 @@
+---------------------- LAB 19 part a -------------------------
+1. db.STUDENT.find({RollNo : {$gt : 103}, Backlog : {$gt : 0}, Branch : {$in : ['CE', 'IT']}}, {RollNo : 1, Name : 1, _id : 0})
+2. db.STUDENT.find({SPI : {$gt : 8, $lt : 9}, Branch : {$in : ['CE', 'IT']}}, {Name : 1, _id : 0})
+3. db.STUDENT.find({Branch : {$nin : ['CE']}})
+4. db.STUDENT.find({}, {RollNo : 1, Name : 1, _id : 0}).limit(3)
+5. db.STUDENT.find({SPI : {$gt : 8.5}}, {RollNo : 1, Name : 1, _id : 0}).limit(3)
+6. db.STUDENT.distinct('City')
+7. db.STUDENT.distinct('Branch')
+8. db.STUDENT.find().sort({Backlog : -1, SPI : 1})
+9. db.STUDENT.updateOne({Name : 'Jay'}, {$set : {Branch : 'MCA', City : 'Jamnagar'}})
+
+-------------------- LAB 19 part b -----------------------
+1. db.STUDENT.find({Backlog : {$gt : 1, $eq : null}, Branch : {$in : ['CE', 'IT']}}, {Name : 1, _id : 0})
+
+
+---------------------- LAB 20 Part A ----------------------
+1. db.EMPLOYEE.find({Salary : {$gt : 13000}, City: {$in : ['Rajkot', 'Baroda']}})
+2. db.EMPLOYEE.find().sort({EmpName : 1})
+3. db.EMPLOYEE.distinct('City')
+4. db.collectionName.updateMany({ name: { $in: ["Keyur", "Bhoomi"] } },{ $set: { city: null } })
+5. db.EMPLOYEE.find({City : null})
+6. db.EMPLOYEE.deleteMany({Salary : {$gte : 14000}})
+7. db.EMPLOYEE.deleteMany({City : 'Rajkot'})
+8. db.EMPLOYEE.deleteMany({JoiningDate : {$gte : new Date('01-01-2007')}})
+9. db.EMPLOYEE.deleteMany({})
+10. db.EMPLOYEE.drop()
