@@ -1,0 +1,69 @@
+db.STUDENT.insertMany([
+  {
+    StuID: 1011,
+    FirstName: "Keyur",
+    LastName: "Patel",
+    Website: "techonthenet.com",
+    City: "Rajkot",
+    Division: "II-BCX"
+  },
+  {
+    StuID: 1022,
+    FirstName: "Hardik",
+    LastName: "Shah",
+    Website: "digminecraft.com",
+    City: "Ahmedabad",
+    Division: "I-BCY"
+  },
+  {
+    StuID: 1033,
+    FirstName: "Kajal",
+    LastName: "Trivedi",
+    Website: "bigactivities.com",
+    City: "Baroda",
+    Division: "IV-DCX"
+  },
+  {
+    StuID: 1044,
+    FirstName: "Bhoomi",
+    LastName: "Gajera",
+    Website: "checkyourmath.com",
+    City: "Ahmedabad",
+    Division: "III-DCW"
+  },
+  {
+    StuID: 1055,
+    FirstName: "Harmit",
+    LastName: "Mitel",
+    Website: null,
+    City: "Rajkot",
+    Division: "II-BCY"
+  },
+  {
+    StuID: 1066,
+    FirstName: "Ashok",
+    LastName: "Jani",
+    Website: null,
+    City: "Baroda",
+    Division: "II-BCZ"
+  }
+]);
+
+1. db.STUDENT.find({ FirstName: /^k/i }, { FirstName: 1, LastName: 1 });
+2. db.STUDENT.find({ $expr: { $eq: [{ $strLenCP: "$FirstName" }, 5] } }, { FirstName: 1, LastName: 1 });
+3. db.STUDENT.find({ City: { $regex: /a$/, $options: 'i' }, $expr: { $eq: [{ $strLenCP: "$City" }, 6] } }, { FirstName: 1, LastName: 1 });
+4. db.STUDENT.find({ LastName: { $regex: /tel$/, $options: 'i' } });
+5. db.STUDENT.find({ FirstName: { $regex: /^ha.*t$/, $options: 'i' } });
+6. db.STUDENT.find({ FirstName: { $regex: /^k.y/i } });
+7. db.STUDENT.find({ Website: null, $expr: { $eq: [{ $strLenCP: "$FirstName" }, 5] } }, { FirstName: 1, LastName: 1 });
+8. db.STUDENT.find({ LastName: { $regex: /jer/i } });
+9. db.STUDENT.find({ City: { $regex: /^[rb]/i } });
+10. db.STUDENT.find({ Website: { $ne: null } }, { FirstName: 1, LastName: 1 });
+11. db.STUDENT.find({ FirstName: { $regex: /^[a-h]/i } });
+12. db.STUDENT.find({ FirstName: { $regex: /^.[aeiouAEIOU]/ } });
+13. db.STUDENT.find({ City: { $regex: /rod/i } }, { FirstName: 1, LastName: 1 });
+14. db.STUDENT.find({ Website: { $regex: /^bi/i } }, { FirstName: 1, LastName: 1 });
+15. db.STUDENT.find({ LastName: { $regex: /^.{6}$/ } }, { City: 1 });
+16. db.STUDENT.find({ City: { $regex: /^.{5}$/ }, City: { $not: /^ba/i } });
+17. db.STUDENT.find({ Division: { $regex: /^II/i } });
+18. db.STUDENT.find({ Division: { $regex: /bc/i } }, { FirstName: 1 });
